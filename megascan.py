@@ -5,22 +5,22 @@ def do_normal_map(directoryPath, familyRoot):
     # pkfg22_4K_Normal.jpg -> pkfg22_4K_n.tga
     jpg_path = os.path.join(directoryPath, familyRoot + "Normal.jpg")
     if not os.path.exists(jpg_path):
-        print 'Normal map file is missing: %s' % jpg_path
+        print('Normal map file is missing: %s' % jpg_path)
         sys.exit(1)
     
     tga_path = familyRoot + "n.tga"
     Image.open(jpg_path).save(tga_path)
-    print " -> Normal map at %s" % tga_path
+    print(" -> Normal map at %s" % tga_path)
     
 def do_albedo_displacement(directoryPath, familyRoot):
     # pkfg22_4K_Albedo.jpg (RGB) + pkfg22_4K_Displacement.jpg (A)
     albedo_jpg_path = os.path.join(directoryPath, familyRoot + "Albedo.jpg")
     displacement_jpg_path = os.path.join(directoryPath, familyRoot + "Displacement.jpg")    
     if not os.path.exists(albedo_jpg_path):
-        print 'Albedo file is missing: %s' % albedo_jpg_path
+        print('Albedo file is missing: %s' % albedo_jpg_path)
         sys.exit(1)
     if not os.path.exists(displacement_jpg_path):
-        print 'Displacement map file is missing: %s' % displacement_jpg_path
+        print('Displacement map file is missing: %s' % displacement_jpg_path)
         sys.exit(1)
         
     output_tga_path = familyRoot + "a_d.tga"
@@ -31,7 +31,7 @@ def do_albedo_displacement(directoryPath, familyRoot):
                 output.paste(albedo_src)
                 output.putalpha(displacement_alpha)
                 output.save(output_tga_path)
-                print " -> Albedo/Displacement map at %s" % output_tga_path
+                print(" -> Albedo/Displacement map at %s" % output_tga_path)
                 
 def do_compact_ao(directoryPath, familyRoot):
     # pkfg22_4K_Metallic.jpg (R, optional) +
@@ -42,9 +42,9 @@ def do_compact_ao(directoryPath, familyRoot):
     roughness_jpg_path = os.path.join(directoryPath, familyRoot + "Roughness.jpg")
     cavity_jpg_path = os.path.join(directoryPath, familyRoot + "Cavity.jpg")
     ao_jpg_path = os.path.join(directoryPath, familyRoot + "AO.jpg")
-    if not os.path.exists(roughness_jpg_path): print 'Roughness map is missing: %s' % roughness_jpg_path; sys.exit(1)
-    if not os.path.exists(cavity_jpg_path): print 'Cavity map is missing: %s' % cavity_jpg_path; sys.exit(1)
-    if not os.path.exists(ao_jpg_path): print 'AO map is missing: %s' % ao_jpg_path; sys.exit(1)
+    if not os.path.exists(roughness_jpg_path): print('Roughness map is missing: %s' % roughness_jpg_path); sys.exit(1)
+    if not os.path.exists(cavity_jpg_path): print('Cavity map is missing: %s' % cavity_jpg_path); sys.exit(1)
+    if not os.path.exists(ao_jpg_path): print('AO map is missing: %s' % ao_jpg_path); sys.exit(1)
     with Image.open(ao_jpg_path) as ao_src:
         with Image.open(cavity_jpg_path) as cavity_src:
             with Image.open(roughness_jpg_path) as roughness_src:
@@ -58,7 +58,7 @@ def do_compact_ao(directoryPath, familyRoot):
                 output = Image.merge("RGBA", (metallic_src.split()[0], roughness_src.split()[0], cavity_src.split()[0], ao_src.split()[0]))
                 output_tga_path = familyRoot + "m_r_c_ao.tga"
                 output.save(output_tga_path)
-                print " -> M/R/C/AO map at %s" % output_tga_path
+                print(" -> M/R/C/AO map at %s" % output_tga_path)
                 
                 metallic_src.close()
 
@@ -66,22 +66,22 @@ def get_family_root(directoryPath):
     # figure out who the albedo is
     albedo_path = next(f for f in os.listdir(directoryPath) if "albedo" in f.lower())
     if albedo_path == None:
-        print 'Could not find an albedo file in directory %s. Aborting.' % directoryPath
+        print('Could not find an albedo file in directory %s. Aborting.' % directoryPath)
     albedo_idx = albedo_path.lower().find("albedo")
     return albedo_path[:albedo_idx]
 
 def handle_directory(directoryPath):
     if not os.path.isdir(directoryPath):
-        print 'Directory %s does not exist. Aborting.' % (directoryPath)
+        print('Directory %s does not exist. Aborting.' % (directoryPath))
         sys.exit(1)
     family_root = get_family_root(directoryPath)
-    print 'Handling family at %s' % family_root
+    print('Handling family at %s' % family_root)
     do_normal_map(directoryPath, family_root)
     do_albedo_displacement(directoryPath, family_root)
     do_compact_ao(directoryPath, family_root)
 
 def printUsage():
-    print 'Usage: %s [directories]' % (sys.argv[0])
+    print('Usage: %s [directories]' % (sys.argv[0]))
 
 def main():
     if len(sys.argv) < 2:
