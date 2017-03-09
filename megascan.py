@@ -11,6 +11,27 @@ def do_normal_map(directoryPath, familyRoot):
     tga_path = familyRoot + "n.tga"
     Image.open(jpg_path).save(tga_path)
     print " -> Normal map at %s" % tga_path
+    
+def do_albedo_displacement(directoryPath, familyRoot):
+    # pkfg22_4K_Albedo.jpg (RGB) + pkfg22_4K_Displacement.jpg (A)
+    albedo_jpg_path = os.path.join(directoryPath, familyRoot + "Albedo.jpg")
+    displacement_jpg_path = os.path.join(directoryPath, familyRoot + "Displacement.jpg")    
+    if not os.path.exists(albedo_jpg_path):
+        print 'Albedo file is missing: %s' % albedo_jpg_path
+        sys.exit(1)
+    if not os.path.exists(displacement_jpg_path):
+        print 'Displacement map file is missing: %s' % displacement_jpg_path
+        sys.exit(1)
+        
+    output_tga_path = familyRoot + "a_d.tga"
+    with Image.open(albedo_jpg_path) as albedo_src:
+        with Image.open(displacement_jpg_path) as displacement_src:
+            displacement_alpha = displacement_src.split()[0]            
+            with Image.new("RGBA", albedo_src.size) as output:
+                output.paste(albedo_src)
+                output.putalpha(displacement_alpha)
+                output.save(output_tga_path)
+                print " -> Albedo/Displacement map at %s" % output_tga_path
 
 def get_family_root(directoryPath):
     # figure out who the albedo is
@@ -27,6 +48,7 @@ def handle_directory(directoryPath):
     family_root = get_family_root(directoryPath)
     print 'Handling family at %s' % family_root
     do_normal_map(directoryPath, family_root)
+    do_albedo_displacement(directoryPath, family_root)
 
 def printUsage():
     print 'Usage: %s [directories]' % (sys.argv[0])
