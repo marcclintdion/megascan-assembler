@@ -56,9 +56,9 @@ def do_compact_ao(directoryPath, familyRoot):
                     metallic_src = Image.new('RGBA', ao_src.size)
                     
                 output = Image.merge("RGBA", (metallic_src.split()[0], roughness_src.split()[0], cavity_src.split()[0], ao_src.split()[0]))
-                output_tga_path = familyRoot + "s_r_c_ao.tga"
+                output_tga_path = familyRoot + "m_r_c_ao.tga"
                 output.save(output_tga_path)
-                print " -> S/R/C/AO map at %s" % output_tga_path
+                print " -> M/R/C/AO map at %s" % output_tga_path
                 
                 metallic_src.close()
 
