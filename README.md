@@ -1,5 +1,5 @@
 # Megascan Assembler
-Tool for adapting megascan source textures into packed-channel textures for decoding using shaders.
+Tool for adapting [megascan](https://megascans.se/) source textures into packed-channel textures for decoding using shaders.
 
 ## Usage
 ```
