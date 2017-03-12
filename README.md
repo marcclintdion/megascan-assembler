@@ -1,6 +1,9 @@
 # Megascan Assembler
 Tool for adapting [megascan](https://megascans.se/) source textures into packed-channel textures for decoding using shaders.
 
+## License
+GNU GPL 3.0
+
 ## Usage
 ```
 python megascan.py dir1 dir2 dir3 .. dirN
