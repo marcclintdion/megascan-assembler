@@ -5,4 +5,4 @@ cd build
 Get-ChildItem E:\megascans\surfaces | Foreach {python ..\megascan.py $_.FullName}
 
 # Delete all individual TGAs, leaving just the zipped archives remaining.
-Get-ChildItem .\build\ -Include *.tga -Recurse | Foreach {Remove-Item $_.FullName}
+Get-ChildItem -Include *.tga -Recurse | Foreach {Remove-Item $_.FullName}
