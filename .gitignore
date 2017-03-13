@@ -1,3 +1,5 @@
 *.tga
 *.swp
 *.zip
+
+build/**
