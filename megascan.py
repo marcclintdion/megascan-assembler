@@ -11,7 +11,7 @@ def do_normal_map(directoryPath, familyRoot, filenameRoot):
         print('Normal map file is missing: %s' % jpg_path)
         sys.exit(1)
 
-    tga_path = TEXTURE_FILE_PREFIX + familyRoot + "_n.tga"
+    tga_path = lower(TEXTURE_FILE_PREFIX + familyRoot + "_n.tga")
     Image.open(jpg_path).save(tga_path)
     print(" -> Normal map at %s" % tga_path)
     return tga_path
@@ -27,7 +27,7 @@ def do_albedo_displacement(directoryPath, familyRoot, filenameRoot):
         print('Displacement map file is missing: %s' % displacement_jpg_path)
         sys.exit(1)
 
-    output_tga_path = TEXTURE_FILE_PREFIX + familyRoot + "_a_d.tga"
+    output_tga_path = lower(TEXTURE_FILE_PREFIX + familyRoot + "_a_d.tga")
     with Image.open(albedo_jpg_path) as albedo_src:
         with Image.open(displacement_jpg_path) as displacement_src:
             displacement_alpha = displacement_src.split()[0]
@@ -51,7 +51,7 @@ def do_compact_ao(directoryPath, familyRoot, filenameRoot):
     if not os.path.exists(cavity_jpg_path): print('Cavity map is missing: %s' % cavity_jpg_path); sys.exit(1)
     if not os.path.exists(ao_jpg_path): print('AO map is missing: %s' % ao_jpg_path); sys.exit(1)
 
-    output_tga_path = TEXTURE_FILE_PREFIX + familyRoot + "_m_r_c_ao.tga"
+    output_tga_path = lower(TEXTURE_FILE_PREFIX + familyRoot + "_m_r_c_ao.tga")
 
     with Image.open(ao_jpg_path) as ao_src:
         with Image.open(cavity_jpg_path) as cavity_src:
@@ -94,11 +94,14 @@ def handle_directory(directoryPath):
     archive_family(family_root, [normal_map_path, ad_path, compact_path])
 
 def archive_family(family_root, paths):
-    zipname = family_root.strip("-_ ") + ".zip"
+    zipname = lower(family_root.strip("-_ ") + ".zip")
     with zipfile.ZipFile(zipname, mode = 'w') as z:
         for path in paths:
             z.write(path)
     print(' ~> Generated zip archive of %s called %s' % (family_root, zipname))
+
+def lower(str):
+    return str.lower()
 
 def printUsage():
     print('Usage: %s [directories]' % (sys.argv[0]))
